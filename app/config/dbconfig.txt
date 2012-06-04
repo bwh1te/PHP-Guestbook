@@ -1,0 +1,5 @@
+dbtype=mysql
+user=root
+password=123
+host=localhost
+dbname=guestbook

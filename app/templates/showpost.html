@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+		<title><? echo $this->title ?></title>
+		<?  $stylesheets = $this->getStylesheets();
+			if (!empty($stylesheets))
+			foreach ($stylesheets as $css) { ?>
+		<link rel="stylesheet" href="<? echo $css ?>" type="text/css" media="screen" title="no title" charset="utf-8" />
+		<?  } ?>
+	</head>
+	<body>
+		<div id="container">
+			<!-- HEADER -->
+			<div id="header">
+				<div id="logo">
+					<img src="templates/img/logo.png" />	
+				</div>	
+				<div id="auth">
+				    <? if (!empty($this->values['user'])): ?>
+				    <h3 class="user"><? echo $this->values['user']; ?></h3>
+				    <a href="index.php?action=logout">Выйти</a>
+				    <? else: ?>				    
+					<form action="index.php?action=login" method="post" accept-charset="utf-8">
+						<label for="ulogin">Имя</label>
+						<input type="text" name="ulogin" value="" id="ulogin">
+						<label for="upass">Пароль</label>
+						<input type="password" name="upass" id="upass">
+						<input type="submit" value="Войти">
+					</form>
+					<? endif; ?>
+				</div>
+			</div>
+			<!-- END OF HEADER -->
+			
+			<div id="navigation">
+				<? $pages = $this->values['pages_count'];
+				$current_page = $this->values['current_page'];
+				$page_numbers = $this->values['pages_to_show']; ?>			
+				<? if ($current_page > 1): ?>
+				<a href="index.php?action=showpost&page=<? echo $current_page - 1; ?>">&larr;</a>
+				<? endif; ?>
+				<? foreach ($page_numbers as $page): ?>
+				<a href="index.php?action=showpost&page=<? echo $page; ?>"><? echo $page; ?></a>
+				<? endforeach; ?>
+				<? if ($current_page < $pages): ?>
+				<a href="index.php?action=showpost&page=<? echo $current_page + 1; ?>">&rarr;</a>
+				<? endif; ?>
+			</div>
+			<div id="content">
+			<? $posts = $this->values['posts']; ?>
+			<? foreach ($posts as $post): ?>
+				<div class="post">
+					<div class="aname">
+						<h3 class="user"><? echo $post->author_name; ?></h3>
+					</div>
+					<div class="pdate"><? echo $post->post_date; ?></div>
+					<div class="ptext">
+					    <? echo $post->content; ?>
+						<? if ((($this->values['user_id'] != null) and ($post->author_id == $this->values['user_id'])) or ($this->values['user_id'] == 1)): ?>
+							[<a href="index.php?action=delete&post_id=<? echo $post->id; ?>">X</a>]
+						<? endif; ?>
+						<? if (($this->values['user_id'] == 1) and (($post->author_id != null) and ($post->author_id != 1))): ?>
+							[<a href="index.php?action=ban&bad_user_id=<? echo $post->author_id; ?>">Бан</a>]
+						<? endif; ?>
+					</div>
+				</div>
+			<? endforeach; ?>
+			</div>
+			<div id="newpost">
+				<form action="index.php?action=newpost" method="post" accept-charset="utf-8">
+					<input type="text" name="ctext" value="" id="ctext">
+					<input type="submit" value="Комментировать">
+				</form>
+			</div>
+		</div>	
+		<div id="footer">
+			<p>
+				<a href="" target="_top">Вверх</a>&nbsp;
+				Alexander Belyaev for Softline, 2012				
+			</p>
+		</div>		
+	</body>
+</html>
